@@ -50,6 +50,10 @@ public class Board {
         return this.strikes;
     }
 
+    public int getSize() {
+        return this.ships.length;
+    }
+
     //Setters:
     public void setName(String name) {
         this.name = name;
@@ -76,12 +80,12 @@ public class Board {
     public void print() {
         System.out.println("Navires: ");
         String firstLine="   ";
-        for (int i=0;i<this.ships.length;i++) {
+        for (int i=0;i<this.getSize();i++) {
             char ascii = (char)(i+65);
             firstLine += Character.toString(ascii) + "  ";
         }
         System.out.println(firstLine);
-        for (int i=0;i<this.ships.length;i++) {
+        for (int i=0;i<this.getSize();i++) {
             String str="";
             str += String.valueOf(i+1) + " ";
             for (int j=0; j<this.ships[0].length;j++) {
@@ -96,15 +100,15 @@ public class Board {
 
         System.out.println("\nFrappes: ");
         firstLine="   ";
-        for (int i=0;i<this.strikes.length;i++) {
+        for (int i=0;i<this.getSize();i++) {
             char ascii = (char)(i+65);
             firstLine += Character.toString(ascii) + "  ";
         }
         System.out.println(firstLine);
-        for (int i=0;i<this.strikes.length;i++) {
+        for (int i=0;i<this.getSize();i++) {
             String str="";
             str += String.valueOf(i+1) + " ";
-            for (int j=0; j<this.strikes[0].length;j++) {
+            for (int j=0; j<this.getSize();j++) {
                 if (this.strikes[i][j]) {
                     str+= " X  ";
                 } else {
