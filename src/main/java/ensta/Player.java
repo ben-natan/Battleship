@@ -1,4 +1,4 @@
-package ensta;
+// package ensta;
 import java.io.Serializable;
 import java.util.List;
 
@@ -34,22 +34,46 @@ public class Player {
 
         do {
             AbstractShip s = ships[i];
-            String msg = String.format("placer %d : %s(%d)", i + 1, s.getName(), s.getLength());
+            String msg = String.format("placer %d : %s(%d)", i + 1, s.getName(), s.getSize());
             System.out.println(msg);
             InputHelper.ShipInput res = InputHelper.readShipInput();
-            // TODO set ship orientation
-            // TODO put ship at given position
+            res.x += 1;  // hotfix
+            res.y += 1;
 
-            // TODO when ship placement successful
-            ++i;
+            // Set ship orientation
+            switch(res.orientation) {
+                case "e":
+                    s.setOrientation(Orientation.EAST);
+                    break;
+                case "w":
+                    s.setOrientation(Orientation.WEST);
+                    break;
+                case "n":
+                    s.setOrientation(Orientation.NORTH);
+                    break;
+                case "s":
+                    s.setOrientation(Orientation.SOUTH);
+                    break;
+            }
+
+            // Put ship at given position
+            try {
+                this.board.putShip(s, res.x, res.y);
+                // Show board
+                this.board.print();
+                ++i;
+            } catch(Exception e) {
+                // System.out.println(e.toString());
+                System.out.println("Impossible! Essayez autre chose: ");
+            }
+            
             done = i == 5;
 
-            board.print();
         } while (!done);
     }
 
     public Hit sendHit(int[] coords) {
-        boolean done;
+        boolean done = false;
         Hit hit = null;
 
         do {

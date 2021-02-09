@@ -1,4 +1,6 @@
 // package ensta;
+import java.util.ArrayList;
+import java.util.List; // Pour tester
 
 public class Board implements IBoard {
     private String name;
@@ -79,43 +81,34 @@ public class Board implements IBoard {
 
     public void print() {
         System.out.println("Navires: ");
-        String firstLine="   ";
+        String firstLineShips="   ";
+        String firstLineStrikes = "   ";
+        String spaceBetween = "       ";
         for (int i=0;i<this.getSize();i++) {
             char ascii = (char)(i+65);
-            firstLine += Character.toString(ascii) + "  ";
+            firstLineShips += (i == this.getSize() - 1) ? Character.toString(ascii) + " " : Character.toString(ascii) + "  ";
+            firstLineStrikes += Character.toString(ascii) + "  ";
         }
-        System.out.println(firstLine);
+        System.out.println(firstLineShips + spaceBetween + firstLineStrikes);
         for (int i=0;i<this.getSize();i++) {
-            String str="";
-            str += String.valueOf(i+1) + " ";
+            String strShips="";
+            String strStrikes="";
+            strShips += String.valueOf(i+1) + " ";
+            strStrikes += String.valueOf(i+1) + " ";
             for (int j=0; j<this.ships[0].length;j++) {
                 if (this.ships[i][j] == 'W') {
-                    str+= " . ";
+                    strShips+= " . ";
                 } else {
-                    str+= " " + this.ships[i][j] +" ";
+                    strShips+= " " + this.ships[i][j] +" ";
                 }
-            }
-            System.out.println(str);
-        }
 
-        System.out.println("\nFrappes: ");
-        firstLine="   ";
-        for (int i=0;i<this.getSize();i++) {
-            char ascii = (char)(i+65);
-            firstLine += Character.toString(ascii) + "  ";
-        }
-        System.out.println(firstLine);
-        for (int i=0;i<this.getSize();i++) {
-            String str="";
-            str += String.valueOf(i+1) + " ";
-            for (int j=0; j<this.getSize();j++) {
                 if (this.strikes[i][j]) {
-                    str+= " X  ";
+                    strStrikes+= " X  ";
                 } else {
-                    str+= " . ";
+                    strStrikes+= " . ";
                 }
             }
-            System.out.println(str);
+            System.out.println(strShips + spaceBetween + strStrikes);
         }
     }
 
@@ -237,11 +230,20 @@ public class Board implements IBoard {
 
 
     public static void main(String[] args) {
-        Board a = new Board("bord", 10);
-        Submarine sub = new Submarine(Orientation.SOUTH);
-        a.putShip(sub, 3, 1);
-        a.putShip(sub, 3, 4);
-        a.print();
-
-    }
+        Board playerBoard = new Board("player_board", 10);
+        Board opponentBoard = new Board("opponent_board", 10);
+        Destroyer D1 = new Destroyer();
+        Submarine S1 = new Submarine();
+        Submarine S2 = new Submarine();
+        Battleship B1 = new Battleship();
+        Carrier C1 = new Carrier();
+        List<AbstractShip> abstractShips = new ArrayList<AbstractShip>();
+        abstractShips.add(D1);
+        abstractShips.add(S1);
+        abstractShips.add(S2);
+        abstractShips.add(B1);
+        abstractShips.add(C1);
+        Player player = new Player(playerBoard, opponentBoard, abstractShips);
+        player.putShips();
+    }   
 }
