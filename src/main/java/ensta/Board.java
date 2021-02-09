@@ -1,6 +1,6 @@
 // package ensta;
 
-public class Board {
+public class Board implements IBoard {
     private String name;
     private Character[][] ships;
     private Boolean[][] strikes;
@@ -92,7 +92,7 @@ public class Board {
                 if (this.ships[i][j] == 'W') {
                     str+= " . ";
                 } else {
-                    str+= " X ";
+                    str+= " " + this.ships[i][j] +" ";
                 }
             }
             System.out.println(str);
@@ -119,8 +119,129 @@ public class Board {
         }
     }
 
+    //IBoard
+
+    //getSize déjà implémentée
+
+    public void putShip(AbstractShip ship, int x, int y) {
+        
+        int boardSize = this.getSize();
+        int shipSize = ship.getSize();
+        if (x>boardSize || y>boardSize || x < 1 || y < 1) {
+            throw new IllegalArgumentException("Indexes out of board");
+        }
+        switch (ship.getOrientation()) {
+            case EAST : 
+                // Vérifier que ça rentre
+                if (boardSize - x + 1>= shipSize) {
+                    // Vérifier que ça chevauche rien;
+                    for (int i=0; i<shipSize; i++) {
+                        if (this.ships[y-1][x-1 + i] != 'W') {
+                            throw new IllegalArgumentException("Ships overlap");
+                        }
+                    }
+                    // Placer le ship
+                    char label = ship.getLabel();
+                    for (int i=0; i<shipSize;i++) {
+                        this.ships[y-1][x-1 + i] = label;
+                    }
+                } else {
+                    throw new IllegalArgumentException("Not enough space");
+                }
+                break;
+            case WEST : 
+                // Vérifier que ça rentre
+                if (x  >= shipSize) {
+                    // Vérifier que ça chevauche rien;
+                    for (int i=0; i<shipSize; i++) {
+                        if (this.ships[y-1][x-1- i] != 'W') {
+                            throw new IllegalArgumentException("Ships overlap");
+                        }
+                    }
+                    // Placer le ship
+                    char label = ship.getLabel();
+                    for (int i=0; i<shipSize;i++) {
+                        this.ships[y-1][x-1 - i] = label;
+                    }
+                } else {
+                    throw new IllegalArgumentException("Not enough space");
+                }
+                break;
+            case NORTH :
+                // Vérifier que ça rentre
+                if (y  >= shipSize) {
+                    // Vérifier que ça chevauche rien;
+                    for (int i=0; i<shipSize; i++) {
+                        if (this.ships[y-1 - i][x-1] != 'W') {
+                            throw new IllegalArgumentException("Ships overlap");
+                        }
+                    }
+                    // Placer le ship
+                    char label = ship.getLabel();
+                    for (int i=0; i<shipSize;i++) {
+                        this.ships[y-1 - i][x-1] = label;
+                    }
+                } else {
+                    throw new IllegalArgumentException("Not enough space");
+                }
+                break;
+            case SOUTH :
+                // Vérifier que ça rentre
+                if (boardSize - y + 1 >= shipSize) {
+                    // Vérifier que ça chevauche rien;
+                    for (int i=0; i<shipSize; i++) {
+                        if (this.ships[y-1 + i][x-1] != 'W') {
+                            throw new IllegalArgumentException("Ships overlap");
+                        }
+                    }
+                    // Placer le ship
+                    char label = ship.getLabel();
+                    for (int i=0; i<shipSize;i++) {
+                        this.ships[y-1 + i][x-1] = label;
+                    }
+                } else {
+                    throw new IllegalArgumentException("Not enough space");
+                } break;
+            default: return; // Error
+        }
+    }
+
+    public boolean hasShip(int x, int y) {
+        int boardSize = this.getSize();
+        if (x > boardSize || y > boardSize || x < 1 || y < 1) {
+            throw new IllegalArgumentException("Indexes out of board");
+        } else {
+            return (this.ships[x-1][y-1] == 'W');
+        }
+    }
+
+    public void setHit(boolean hit, int x, int y) {
+        int boardSize = this.getSize();
+        if (x > boardSize || y > boardSize || x < 1 || y < 1) {
+            throw new IllegalArgumentException("Indexes out of board");
+        } else {
+            this.strikes[x-1][y-1] = hit;
+        }
+    }
+
+    public Boolean getHit(int x, int y) {
+        int boardSize = this.getSize();
+        if (x > boardSize || y > boardSize || x < 1 || y < 1) {
+            throw new IllegalArgumentException("Indexes out of board");
+        } else {
+            return this.strikes[x-1][y-1];
+        }
+    }
+
+
+
+
     public static void main(String[] args) {
         Board a = new Board("bord", 10);
+        Submarine sub = new Submarine(Orientation.SOUTH);
+        a.putShip(sub, 3, 1);
+        a.putShip(sub, 3, 4);
         a.print();
+
     }
 }
