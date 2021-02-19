@@ -4,37 +4,38 @@ import java.util.List; // Pour tester
 
 public class Board implements IBoard {
     private String name;
-    private Character[][] ships;
+    private ShipState[][] ships;
     private Boolean[][] strikes;
 
     public Board(String name) {
         this.name = name;
-        this.ships = new Character[10][10];
-        for (int i=0; i<10; i++) {
-            for (int j=0; j<10; j++) {
-                this.ships[i][j] = 'W'; // water
-            }
-        }
+        this.ships = new ShipState[10][10]; // On les laisse à NULL
+        // for (int i=0; i<10; i++) {
+        //     for (int j=0; j<10; j++) {
+        //         this.ships[i][j] = 'W'; // water
+        //     }
+        // }
         this.strikes = new Boolean[10][10];
         for (int i=0; i<10; i++) {
             for (int j=0; j<10; j++) {
-                this.strikes[i][j] = false;
+                this.strikes[i][j] = null;
             }
         }
+        
     }
 
     public Board(String name, int size) {
         this.name = name;
-        this.ships = new Character[size][size];
-        for (int i=0; i<size; i++) {
-            for (int j=0; j<size; j++) {
-                this.ships[i][j] = 'W'; // water
-            }
-        }
+        this.ships = new ShipState[size][size]; // On les laisse à NULL
+        // for (int i=0; i<size; i++) {
+        //     for (int j=0; j<size; j++) {
+        //         this.ships[i][j] = 'W'; // water
+        //     }
+        // }
         this.strikes = new Boolean[size][size];
         for (int i=0; i<size; i++) {
             for (int j=0; j<size; j++) {
-                this.strikes[i][j] = false; 
+                this.strikes[i][j] = null; 
             }
         }
     }
@@ -44,7 +45,7 @@ public class Board implements IBoard {
         return this.name;
     }
 
-    public Character[][] getShips() {
+    public ShipState[][] getShips() {
         return this.ships;
     }
 
@@ -61,7 +62,7 @@ public class Board implements IBoard {
         this.name = name;
     }
 
-    public void setShips(Character[][] ships) {
+    public void setShips(ShipState[][] ships) {
         if (ships.length == this.ships.length && ships[0].length == this.ships[0].length) {
             this.ships = ships;
         } else {
@@ -80,9 +81,9 @@ public class Board implements IBoard {
     //Print:
 
     public void print() {
-        System.out.println("Navires: ");
-        String firstLineShips="   ";
-        String firstLineStrikes = "   ";
+        System.out.println("Navires: " + "                                 " + "Strikes: ");
+        String firstLineShips="  ";
+        String firstLineStrikes = "    ";
         String spaceBetween = "       ";
         for (int i=0;i<this.getSize();i++) {
             char ascii = (char)(i+65);
@@ -90,25 +91,32 @@ public class Board implements IBoard {
             firstLineStrikes += Character.toString(ascii) + "  ";
         }
         System.out.println(firstLineShips + spaceBetween + firstLineStrikes);
+        spaceBetween += "   ";
         for (int i=0;i<this.getSize();i++) {
-            String strShips="";
-            String strStrikes="";
-            strShips += String.valueOf(i+1) + " ";
-            strStrikes += String.valueOf(i+1) + " ";
+            System.out.print(String.valueOf(i+1));
             for (int j=0; j<this.ships[0].length;j++) {
-                if (this.ships[i][j] == 'W') {
-                    strShips+= " . ";
+                if (this.ships[i][j] == null) {
+                    System.out.print(" . ");
                 } else {
-                    strShips+= " " + this.ships[i][j] +" ";
-                }
 
-                if (this.strikes[i][j]) {
-                    strStrikes+= " X  ";
-                } else {
-                    strStrikes+= " . ";
+                    System.out.print(" " + this.ships[i][j].getShip().getLabel() + " ");
                 }
             }
-            System.out.println(strShips + spaceBetween + strStrikes);
+
+            System.out.print(spaceBetween);
+                
+            for (int j=0; j<this.ships[0].length;j++) {
+                if (this.strikes[i][j] == null) {
+                    System.out.print(" . ");
+                } else if (this.strikes[i][j]) {
+                    // en rouge
+                    System.out.print(ColorUtil.colorize(" X ", ColorUtil.Color.RED));
+                } else {
+                    System.out.print(ColorUtil.colorize(" X ", ColorUtil.Color.WHITE));
+                }
+            }
+
+            System.out.println("");
         }
     }
 
@@ -129,14 +137,15 @@ public class Board implements IBoard {
                 if (boardSize - x + 1>= shipSize) {
                     // Vérifier que ça chevauche rien;
                     for (int i=0; i<shipSize; i++) {
-                        if (this.ships[y-1][x-1 + i] != 'W') {
+                        if (this.ships[y-1][x-1 + i] != null) {
                             throw new IllegalArgumentException("Ships overlap");
                         }
                     }
                     // Placer le ship
                     char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
-                        this.ships[y-1][x-1 + i] = label;
+                        // this.ships[y-1][x-1 + i] = label;
+                        this.ships[y-1][x-1 + i] = new ShipState(ship, false);
                     }
                 } else {
                     throw new IllegalArgumentException("Not enough space");
@@ -147,14 +156,15 @@ public class Board implements IBoard {
                 if (x  >= shipSize) {
                     // Vérifier que ça chevauche rien;
                     for (int i=0; i<shipSize; i++) {
-                        if (this.ships[y-1][x-1- i] != 'W') {
+                        if (this.ships[y-1][x-1- i] != null) {
                             throw new IllegalArgumentException("Ships overlap");
                         }
                     }
                     // Placer le ship
                     char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
-                        this.ships[y-1][x-1 - i] = label;
+                        // this.ships[y-1][x-1 - i] = label;
+                        this.ships[y-1][x-1 - i] = new ShipState(ship, false);
                     }
                 } else {
                     throw new IllegalArgumentException("Not enough space");
@@ -165,14 +175,15 @@ public class Board implements IBoard {
                 if (y  >= shipSize) {
                     // Vérifier que ça chevauche rien;
                     for (int i=0; i<shipSize; i++) {
-                        if (this.ships[y-1 - i][x-1] != 'W') {
+                        if (this.ships[y-1 - i][x-1] != null) {
                             throw new IllegalArgumentException("Ships overlap");
                         }
                     }
                     // Placer le ship
                     char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
-                        this.ships[y-1 - i][x-1] = label;
+                        // this.ships[y-1 - i][x-1] = label;
+                        this.ships[y-1 - i][x-1] = new ShipState(ship, false);
                     }
                 } else {
                     throw new IllegalArgumentException("Not enough space");
@@ -183,14 +194,15 @@ public class Board implements IBoard {
                 if (boardSize - y + 1 >= shipSize) {
                     // Vérifier que ça chevauche rien;
                     for (int i=0; i<shipSize; i++) {
-                        if (this.ships[y-1 + i][x-1] != 'W') {
+                        if (this.ships[y-1 + i][x-1] != null) {
                             throw new IllegalArgumentException("Ships overlap");
                         }
                     }
                     // Placer le ship
                     char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
-                        this.ships[y-1 + i][x-1] = label;
+                        // this.ships[y-1 + i][x-1] = label;
+                        this.ships[y-1 + i][x-1] = new ShipState(ship, false);
                     }
                 } else {
                     throw new IllegalArgumentException("Not enough space");
@@ -204,7 +216,7 @@ public class Board implements IBoard {
         if (x > boardSize || y > boardSize || x < 1 || y < 1) {
             throw new IllegalArgumentException("Indexes out of board");
         } else {
-            return (this.ships[x-1][y-1] == 'W');
+            return (this.ships[x-1][y-1] != null);
         }
     }
 
@@ -245,5 +257,9 @@ public class Board implements IBoard {
         abstractShips.add(C1);
         Player player = new Player(playerBoard, opponentBoard, abstractShips);
         player.putShips();
+        player.board.setHit(true, 1, 1);
+        player.board.setHit(false, 3, 5);
+        player.board.setHit(true, 4, 2);
+        player.board.print();
     }   
 }

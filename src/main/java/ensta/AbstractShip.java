@@ -6,12 +6,14 @@ public class AbstractShip {
     private Character label;
     private int size;
     private Orientation orientation;
+    private int strikeCount;
 
     public AbstractShip(String name, Character label, int size, Orientation orientation) {
         this.name = name;
         this.label = label;
         this.size = size;
         this.orientation = orientation;
+        this.strikeCount = 0;
     }
 
     //Setters:
@@ -47,4 +49,19 @@ public class AbstractShip {
     public Orientation getOrientation() {
         return this.orientation;
     }
+
+    public int getStrikeCount() {
+        return this.strikeCount;
+    }
+
+    // Autres
+    public void addStrike() {
+        this.strikeCount +=1;
+    }
+
+    public boolean isSunk() {
+        return (this.strikeCount == this.size);
+    }
+
+
 }
