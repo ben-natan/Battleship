@@ -239,6 +239,25 @@ public class Board implements IBoard {
     }
 
 
+    public Hit sendHit(int x, int y) {
+        if (this.hasShip(x, y)) {
+            this.setHit(true, x, y);
+            this.ships[x-1][y-1].addStrike();
+            if (this.ships[x-1][y-1].getShip().isSunk()) {
+                Hit hit = Hit.fromInt(this.ships[x-1][y-1].getShip().getSize());
+                return hit;
+            } else {
+                Hit hit = Hit.fromInt(-2);
+                return hit;
+            }
+        } else {
+            this.setHit(false, x, y);
+            Hit hit = Hit.fromInt(-1);
+            return hit;
+        }
+    }
+
+
 
 
     public static void main(String[] args) {
@@ -257,9 +276,12 @@ public class Board implements IBoard {
         abstractShips.add(C1);
         Player player = new Player(playerBoard, opponentBoard, abstractShips);
         player.putShips();
-        player.board.setHit(true, 1, 1);
-        player.board.setHit(false, 3, 5);
-        player.board.setHit(true, 4, 2);
+        player.board.sendHit(1, 1);
+        player.board.sendHit(1, 1);
+        player.board.sendHit(1, 3);
+        System.out.println("Sunk? " + player.board.getShips()[0][0].isSunk());
+        player.board.sendHit(3, 5);
+        player.board.sendHit(4, 2);
         player.board.print();
     }   
 }

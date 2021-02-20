@@ -18,6 +18,11 @@ public enum Hit {
     /* ***
      * Constructeur
      */
+    Hit() {
+        this.value = 0;
+        this.label = "";
+    }
+
     Hit(int value, String label) {
         this.value = value;
         this.label = label;
