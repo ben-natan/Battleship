@@ -133,8 +133,6 @@ public class BattleShipsAI implements Serializable {
      * Méthodes privées
      */
 
-    //  size - x + 1 <  shipSize ---  x + sipSize > 1 +
-
     private boolean canPutShip(AbstractShip ship, int x, int y) {
         Orientation o = ship.getOrientation();
         int dx = 0, dy = 0;

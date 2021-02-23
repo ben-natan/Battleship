@@ -231,10 +231,6 @@ public class Board implements IBoard {
     }
 
     public Boolean getHit(int x, int y) {
-        // pour test
-        System.out.println("getHit de : " + x + ", " + y);
-
-
         int boardSize = this.getSize();
         if (x > boardSize || y > boardSize || x < 1 || y < 1) {
             throw new IllegalArgumentException("Indexes out of board");
@@ -246,7 +242,7 @@ public class Board implements IBoard {
 
     public Hit sendHit(int x, int y) {
         if (this.hasShip(x, y)) {
-            this.setHit(true, x, y);
+            // this.setHit(true, x, y);
             this.ships[x-1][y-1].addStrike();
             if (this.ships[x-1][y-1].getShip().isSunk()) {
                 Hit hit = Hit.fromInt(this.ships[x-1][y-1].getShip().getSize());
@@ -256,7 +252,7 @@ public class Board implements IBoard {
                 return hit;
             }
         } else {
-            this.setHit(false, x, y);
+            // this.setHit(false, x, y);
             Hit hit = Hit.fromInt(-1);
             return hit;
         }
