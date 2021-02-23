@@ -1,4 +1,4 @@
-package ensta;
+// package ensta;
 import java.io.Serializable;
 import java.util.*;
 
@@ -58,13 +58,16 @@ public class BattleShipsAI implements Serializable {
      */
     public void putShips(AbstractShip ships[]) {
         int x, y;
-        AbstractShip.Orientation o;
+        Orientation o;
         Random rnd = new Random();
-        AbstractShip.Orientation[] orientations = AbstractShip.Orientation.values();
+        Orientation[] orientations = Orientation.values();
 
         for (AbstractShip s : ships) {
             do {
-                // TODO use Random to pick a random x, y & orientation
+                x = rnd.nextInt(this.board.getSize()) + 1;
+                y = rnd.nextInt(this.board.getSize()) + 1;
+                o = orientations[rnd.nextInt(3)];
+                s.setOrientation(o);
             } while(!canPutShip(s, x, y));
             board.putShip(s, x, y);
         }
@@ -130,26 +133,28 @@ public class BattleShipsAI implements Serializable {
      * Méthodes privées
      */
 
+    //  size - x + 1 <  shipSize ---  x + sipSize > 1 +
+
     private boolean canPutShip(AbstractShip ship, int x, int y) {
-        AbstractShip.Orientation o = ship.getOrientation();
+        Orientation o = ship.getOrientation();
         int dx = 0, dy = 0;
-        if (o == AbstractShip.Orientation.EAST) {
-            if (x + ship.getSize() >= this.size) {
+        if (o == Orientation.EAST) {
+            if (x - 1 + ship.getSize() > this.size) {
                 return false;
             }
             dx = 1;
-        } else if (o == AbstractShip.Orientation.SOUTH) {
-            if (y + ship.getSize() >= this.size) {
+        } else if (o == Orientation.SOUTH) {
+            if (y - 1 + ship.getSize() > this.size) {
                 return false;
             }
             dy = 1;
-        } else if (o == AbstractShip.Orientation.NORTH) {
-            if (y + 1 - ship.getSize() < 0) {
+        } else if (o == Orientation.NORTH) {
+            if (y - ship.getSize() < 0) {
                 return false;
             }
             dy = -1;
-        } else if (o == AbstractShip.Orientation.WEST) {
-            if (x + 1 - ship.getSize() < 0) {
+        } else if (o == Orientation.WEST) {
+            if (x - ship.getSize() < 0) {
                 return false;
             }
             dx = -1;
@@ -174,7 +179,7 @@ public class BattleShipsAI implements Serializable {
     }
 
     private boolean isUndiscovered(int x, int y) {
-        return x >= 0 && x < size && y >= 0 && y < size && board.getHit(x, y) == null;
+        return x >= 1 && x <= size && y >= 1 && y <= size && board.getHit(x, y) == null;
     }
 
     private int[] pickRandomCoord() {
@@ -183,8 +188,8 @@ public class BattleShipsAI implements Serializable {
         int y;
 
         do {
-            x = rnd.nextInt(size);
-            y = rnd.nextInt(size);
+            x = rnd.nextInt(size) + 1;
+            y = rnd.nextInt(size) + 1;
         } while (!isUndiscovered(x, y));
 
         return new int[] {x, y};

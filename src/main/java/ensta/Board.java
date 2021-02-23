@@ -95,20 +95,20 @@ public class Board implements IBoard {
         for (int i=0;i<this.getSize();i++) {
             System.out.print(String.valueOf(i+1));
             for (int j=0; j<this.ships[0].length;j++) {
-                if (this.ships[i][j] == null) {
+                if (this.ships[j][i] == null) {
                     System.out.print(" . ");
                 } else {
 
-                    System.out.print(" " + this.ships[i][j].getShip().getLabel() + " ");
+                    System.out.print(" " + this.ships[j][i].getShip().getLabel() + " ");
                 }
             }
 
             System.out.print(spaceBetween);
                 
             for (int j=0; j<this.ships[0].length;j++) {
-                if (this.strikes[i][j] == null) {
+                if (this.strikes[j][i] == null) {
                     System.out.print(" . ");
-                } else if (this.strikes[i][j]) {
+                } else if (this.strikes[j][i]) {
                     // en rouge
                     System.out.print(ColorUtil.colorize(" X ", ColorUtil.Color.RED));
                 } else {
@@ -137,7 +137,8 @@ public class Board implements IBoard {
                 if (boardSize - x + 1>= shipSize) {
                     // Vérifier que ça chevauche rien;
                     for (int i=0; i<shipSize; i++) {
-                        if (this.ships[y-1][x-1 + i] != null) {
+                        // this.hasShip(x+i,y);
+                        if (this.ships[x-1 + i][y-1] != null) {
                             throw new IllegalArgumentException("Ships overlap");
                         }
                     }
@@ -145,7 +146,7 @@ public class Board implements IBoard {
                     char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
                         // this.ships[y-1][x-1 + i] = label;
-                        this.ships[y-1][x-1 + i] = new ShipState(ship, false);
+                        this.ships[x-1 + i][y-1] = new ShipState(ship, false);
                     }
                 } else {
                     throw new IllegalArgumentException("Not enough space");
@@ -156,7 +157,7 @@ public class Board implements IBoard {
                 if (x  >= shipSize) {
                     // Vérifier que ça chevauche rien;
                     for (int i=0; i<shipSize; i++) {
-                        if (this.ships[y-1][x-1- i] != null) {
+                        if (this.ships[x-1 - i][y-1] != null) {
                             throw new IllegalArgumentException("Ships overlap");
                         }
                     }
@@ -164,7 +165,7 @@ public class Board implements IBoard {
                     char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
                         // this.ships[y-1][x-1 - i] = label;
-                        this.ships[y-1][x-1 - i] = new ShipState(ship, false);
+                        this.ships[x-1 - i][y-1] = new ShipState(ship, false);
                     }
                 } else {
                     throw new IllegalArgumentException("Not enough space");
@@ -175,7 +176,7 @@ public class Board implements IBoard {
                 if (y  >= shipSize) {
                     // Vérifier que ça chevauche rien;
                     for (int i=0; i<shipSize; i++) {
-                        if (this.ships[y-1 - i][x-1] != null) {
+                        if (this.ships[x-1][y-1 - i] != null) {
                             throw new IllegalArgumentException("Ships overlap");
                         }
                     }
@@ -183,7 +184,7 @@ public class Board implements IBoard {
                     char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
                         // this.ships[y-1 - i][x-1] = label;
-                        this.ships[y-1 - i][x-1] = new ShipState(ship, false);
+                        this.ships[x-1][y-1 - i] = new ShipState(ship, false);
                     }
                 } else {
                     throw new IllegalArgumentException("Not enough space");
@@ -194,7 +195,7 @@ public class Board implements IBoard {
                 if (boardSize - y + 1 >= shipSize) {
                     // Vérifier que ça chevauche rien;
                     for (int i=0; i<shipSize; i++) {
-                        if (this.ships[y-1 + i][x-1] != null) {
+                        if (this.ships[x-1][y-1 + i] != null) {
                             throw new IllegalArgumentException("Ships overlap");
                         }
                     }
@@ -202,7 +203,7 @@ public class Board implements IBoard {
                     char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
                         // this.ships[y-1 + i][x-1] = label;
-                        this.ships[y-1 + i][x-1] = new ShipState(ship, false);
+                        this.ships[x-1][y-1 + i] = new ShipState(ship, false);
                     }
                 } else {
                     throw new IllegalArgumentException("Not enough space");
@@ -230,6 +231,10 @@ public class Board implements IBoard {
     }
 
     public Boolean getHit(int x, int y) {
+        // pour test
+        System.out.println("getHit de : " + x + ", " + y);
+
+
         int boardSize = this.getSize();
         if (x > boardSize || y > boardSize || x < 1 || y < 1) {
             throw new IllegalArgumentException("Indexes out of board");
@@ -280,8 +285,7 @@ public class Board implements IBoard {
         player.board.sendHit(1, 1);
         player.board.sendHit(1, 3);
         System.out.println("Sunk? " + player.board.getShips()[0][0].isSunk());
-        player.board.sendHit(3, 5);
-        player.board.sendHit(4, 2);
+        player.board.sendHit(4, 5);
         player.board.print();
     }   
 }
