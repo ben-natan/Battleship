@@ -18,6 +18,7 @@ public class Game {
     private Player player1;
     private Player player2;
     private Scanner sin;
+    static String flushString;
 
     /* ***
      * Constructeurs
@@ -25,30 +26,33 @@ public class Game {
     public Game() {}
 
     public Game init() {
+        flushString = "\r\n".repeat(50);
         if (!loadSave()) {
-            // init attributes
-            System.out.println("entre ton nom:");
-
-            // TODO use a scanner to read player name
             sin = new Scanner(System.in);
-            String playerName = sin.nextLine();
+            System.out.println("Nom du joueur 1: ");
+            String player1Name = sin.nextLine();
+            System.out.println("Nom du joueur 2: ");
+            String player2Name = sin.nextLine();
 
-            // TODO init boards
+
             Board b1, b2;
-            b1 = new Board(playerName, 10);
-            b2 = new Board("AI Board", 10);
+            b1 = new Board(player1Name, 10);
+            b2 = new Board(player2Name, 10);
 
-            // TODO init this.player1 & this.player2
-            List<AbstractShip> player_ships = createDefaultShips();
-            this.player1 = new Player(b1, b2, player_ships);
 
-            List<AbstractShip> ai_ships = createDefaultShips();
-            this.player2 = new AIPlayer(b2, b1, ai_ships);
+            List<AbstractShip> player1_ships = createDefaultShips();
+            this.player1 = new Player(b1, b2, player1_ships);
 
-            b1.print();
-            // place player ships
+            List<AbstractShip> player2_ships = createDefaultShips();
+            this.player2 = new Player(b2, b1, player2_ships);
+
             player1.putShips();
+            sleep(3000);
+            clearScreen();
+
             player2.putShips();
+            sleep(3000);
+            clearScreen();
         }
         return this;
     }
@@ -59,13 +63,13 @@ public class Game {
     public void run() {
         int[] coords = new int[2];
         Board b1 = player1.board;
+        Board b2 = player2.board;
         Hit hit;
 
         // main loop
-        b1.print();
         boolean done;
         do {
-            System.out.println(b1.getName());
+            System.out.println("Au tour de " + b1.getName());
             b1.print();
 
             hit = player1.sendHit(coords);
@@ -77,31 +81,39 @@ public class Game {
             b1.print();
             System.out.println(makeHitMessage(false /* outgoing hit */, coords, hit));
 
-           
-
             save();
+
+            if (!strike) {
+                sleep(3000);
+                clearScreen();
+            }
+            
+            
 
             if (!done && !strike) {
                 do {
 
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace(); 
-                    }
+                    System.out.println("Au tour de " + b2.getName());
+                    b2.print();
 
                     hit = player2.sendHit(coords);
 
                     strike = hit != Hit.MISS;
-                    if (strike) {
-                        b1.print();
-                    }
-                    System.out.println(makeHitMessage(true /* incoming hit */, coords, hit));
-                    done = updateScore();
+                    b2.setHit(strike, coords[0], coords[1]);
 
+                    
+                    done = updateScore();
+                    b2.print();
+
+                    System.out.println(makeHitMessage(true /* incoming hit */, coords, hit));
 
                     if (!done) {
                         save();
+                    }
+
+                    if (!strike) {
+                        sleep(3000);
+                        clearScreen();
                     }
                 } while(strike && !done);
             }
@@ -183,6 +195,18 @@ public class Game {
 
     private static List<AbstractShip> createDefaultShips() {
         return Arrays.asList(new AbstractShip[]{new Destroyer(), new Submarine(), new Submarine(), new Battleship(), new Carrier()});
+    }
+
+    public static void clearScreen() {  
+        System.out.println(flushString); 
+    }
+
+    public static void sleep(int n) {
+        try {
+            Thread.sleep(n);
+        } catch (InterruptedException e) {
+            e.printStackTrace(); 
+        }
     }
 
     public static void main(String args[]) {
