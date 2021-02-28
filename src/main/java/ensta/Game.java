@@ -68,7 +68,9 @@ public class Game {
         // main loop
         boolean done;
         do {
-            System.out.println("Au tour de " + b1.getName());
+            System.out.print("Au tour de: ");
+            System.out.println(ColorUtil.colorize(b1.getName(), ColorUtil.Color.YELLOW));
+
             b1.print();
 
             hit = player1.sendHit(coords);
@@ -92,7 +94,8 @@ public class Game {
             if (!done && !strike) {
                 do {
 
-                    System.out.println("Au tour de " + b2.getName());
+                    System.out.print("Au tour de: ");
+                    System.out.println(ColorUtil.colorize(b2.getName(), ColorUtil.Color.PURPLE));
                     b2.print();
 
                     hit = player2.sendHit(coords);
@@ -131,14 +134,10 @@ public class Game {
             if (!SAVE_FILE.exists()) {
                 SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
             }
-            // TODO bonus 2 : serialize players
 
-             // ouverture d'un flux sur un fichier
             FileOutputStream fos = new FileOutputStream(SAVE_FILE);
             ObjectOutputStream oos =  new ObjectOutputStream(fos) ;
                     
-            // création d'un objet à sérializer
-            // sérialization de l'objet
             oos.writeObject(this.player1);
             oos.writeObject(this.player2);
 
@@ -146,6 +145,7 @@ public class Game {
             fos.close(); 
               
             System.out.println("Partie sauvegardée!"); 
+            System.out.println("");
 
 
         } catch (IOException e) {
@@ -156,11 +156,9 @@ public class Game {
     private boolean loadSave() {
         if (SAVE_FILE.exists()) {
             try {
-                // Reading the object from a file 
                 FileInputStream fis = new FileInputStream(SAVE_FILE); 
                 ObjectInputStream ois = new ObjectInputStream(fis); 
                 
-                // Method for deserialization of object 
                 this.player1 = (Player)ois.readObject(); 
                 this.player2 = (Player)ois.readObject();
 
@@ -168,6 +166,7 @@ public class Game {
                 fis.close(); 
             
                 System.out.println("Partie existante chargée!"); 
+                System.out.println(""); 
                 return true;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -197,10 +196,10 @@ public class Game {
     private String makeHitMessage(boolean incoming, int[] coords, Hit hit) {
         String msg;
         ColorUtil.Color color = ColorUtil.Color.RESET;
-        System.out.println(hit);
         switch (hit) {
             case MISS:
                 msg = hit.toString();
+                color = ColorUtil.Color.CYAN;
                 break;
             case STRIKE:
                 msg = hit.toString();
@@ -220,10 +219,17 @@ public class Game {
         return Arrays.asList(new AbstractShip[]{new Destroyer(), new Submarine(), new Submarine(), new Battleship(), new Carrier()});
     }
 
+    /**
+     * clears screen to hide the board
+     */
     public static void clearScreen() {  
         System.out.println(flushString); 
     }
 
+    /**
+     * sleeps for n milliseconds
+     * @param n
+     */
     public static void sleep(int n) {
         try {
             Thread.sleep(n);

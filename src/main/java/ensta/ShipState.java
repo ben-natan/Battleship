@@ -12,6 +12,9 @@ public class ShipState implements Serializable {
         this.struck = struck;
     }
 
+    /**
+     * adds a strike to the state and to the referenced ship
+     */
     public void addStrike() {
         if (!this.struck) {
             this.struck = true;
@@ -32,6 +35,10 @@ public class ShipState implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @return if referenced ship is sunk or not
+     */
     public boolean isSunk() {
         return this.ship.isSunk();
     }

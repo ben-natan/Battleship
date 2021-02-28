@@ -1,6 +1,4 @@
 package ensta;
-import java.util.ArrayList;
-import java.util.List; // Pour tester
 import java.io.Serializable;
 
 public class Board implements IBoard, Serializable {
@@ -13,11 +11,6 @@ public class Board implements IBoard, Serializable {
     public Board(String name) {
         this.name = name;
         this.ships = new ShipState[10][10]; // On les laisse à NULL
-        // for (int i=0; i<10; i++) {
-        //     for (int j=0; j<10; j++) {
-        //         this.ships[i][j] = 'W'; // water
-        //     }
-        // }
         this.strikes = new Boolean[10][10];
         for (int i=0; i<10; i++) {
             for (int j=0; j<10; j++) {
@@ -30,11 +23,6 @@ public class Board implements IBoard, Serializable {
     public Board(String name, int size) {
         this.name = name;
         this.ships = new ShipState[size][size]; // On les laisse à NULL
-        // for (int i=0; i<size; i++) {
-        //     for (int j=0; j<size; j++) {
-        //         this.ships[i][j] = 'W'; // water
-        //     }
-        // }
         this.strikes = new Boolean[size][size];
         for (int i=0; i<size; i++) {
             for (int j=0; j<size; j++) {
@@ -82,8 +70,8 @@ public class Board implements IBoard, Serializable {
     }
 
     //Print:
-
     public void print() {
+        System.out.println("");
         System.out.println("Navires: " + "                                 " + "Strikes: ");
         String firstLineShips="  ";
         String firstLineStrikes = "    ";
@@ -121,12 +109,14 @@ public class Board implements IBoard, Serializable {
 
             System.out.println("");
         }
+        System.out.println("");
     }
 
-    //IBoard
-
-    //getSize déjà implémentée
-
+    /**
+     * @param ship the ship to put
+     * @param x 
+     * @param y
+     */
     public void putShip(AbstractShip ship, int x, int y) {
         
         int boardSize = this.getSize();
@@ -211,6 +201,11 @@ public class Board implements IBoard, Serializable {
         }
     }
 
+    /**
+     * @param x
+     * @param y
+     * @return if board(x,y) has ship
+     */
     public boolean hasShip(int x, int y) {
         int boardSize = this.getSize();
         if (x > boardSize || y > boardSize || x < 1 || y < 1) {
@@ -220,6 +215,11 @@ public class Board implements IBoard, Serializable {
         }
     }
 
+    /**
+     * @param hit true or false
+     * @param x
+     * @param y
+     */
     public void setHit(boolean hit, int x, int y) {
         int boardSize = this.getSize();
         if (x > boardSize || y > boardSize || x < 1 || y < 1) {
@@ -229,6 +229,11 @@ public class Board implements IBoard, Serializable {
         }
     }
 
+    /**
+     * @param x
+     * @param y
+     * @return strikes(x,y)
+     */
     public Boolean getHit(int x, int y) {
         int boardSize = this.getSize();
         if (x > boardSize || y > boardSize || x < 1 || y < 1) {
@@ -238,7 +243,11 @@ public class Board implements IBoard, Serializable {
         }
     }
 
-
+    /**
+     * @param x
+     * @param y
+     * @return hit result 
+     */
     public Hit sendHit(int x, int y) {
         if (this.hasShip(x, y)) {
             // this.setHit(true, x, y);
@@ -255,32 +264,5 @@ public class Board implements IBoard, Serializable {
             Hit hit = Hit.fromInt(-1);
             return hit;
         }
-    }
-
-
-
-
-    public static void main(String[] args) {
-        Board playerBoard = new Board("player_board", 10);
-        Board opponentBoard = new Board("opponent_board", 10);
-        Destroyer D1 = new Destroyer();
-        Submarine S1 = new Submarine();
-        Submarine S2 = new Submarine();
-        Battleship B1 = new Battleship();
-        Carrier C1 = new Carrier();
-        List<AbstractShip> abstractShips = new ArrayList<AbstractShip>();
-        abstractShips.add(D1);
-        abstractShips.add(S1);
-        abstractShips.add(S2);
-        abstractShips.add(B1);
-        abstractShips.add(C1);
-        Player player = new Player(playerBoard, opponentBoard, abstractShips);
-        player.putShips();
-        player.board.sendHit(1, 1);
-        player.board.sendHit(1, 1);
-        player.board.sendHit(1, 3);
-        System.out.println("Sunk? " + player.board.getShips()[0][0].isSunk());
-        player.board.sendHit(4, 5);
-        player.board.print();
-    }   
+    }  
 }

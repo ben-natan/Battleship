@@ -73,6 +73,11 @@ public class Player implements Serializable {
         } while (!done);
     }
 
+    /**
+     * Sends hit to the other board
+     * @param coords
+     * @return the result of the hit
+     */
     public Hit sendHit(int[] coords) {
         boolean done = false;
         Hit hit = null;
