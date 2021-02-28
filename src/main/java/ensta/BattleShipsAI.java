@@ -1,9 +1,11 @@
-// package ensta;
+package ensta;
 import java.io.Serializable;
 import java.util.*;
 
 public class BattleShipsAI implements Serializable {
 
+
+    private static final long serialVersionUID = 1L;
     /* **
      * Attributs
      */

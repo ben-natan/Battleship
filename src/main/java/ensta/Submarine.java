@@ -1,6 +1,7 @@
-// package ensta;
+package ensta;
 
 public class Submarine extends AbstractShip {
+    private static final long serialVersionUID = 1L;
     Submarine() {
         super("Submarine", 'S', 3, Orientation.EAST);
     }

@@ -1,8 +1,11 @@
-// package ensta;
+package ensta;
+import java.io.Serializable;
 
-public class ShipState {
+public class ShipState implements Serializable {
     private AbstractShip ship;
     private boolean struck;
+
+    private static final long serialVersionUID = 1235L;
 
     public ShipState(AbstractShip ship, boolean struck) {
         this.ship = ship;

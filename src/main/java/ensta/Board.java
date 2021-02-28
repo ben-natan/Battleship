@@ -1,11 +1,14 @@
-// package ensta;
+package ensta;
 import java.util.ArrayList;
 import java.util.List; // Pour tester
+import java.io.Serializable;
 
-public class Board implements IBoard {
+public class Board implements IBoard, Serializable {
     private String name;
     private ShipState[][] ships;
     private Boolean[][] strikes;
+
+    private static final long serialVersionUID = 1235L;
 
     public Board(String name) {
         this.name = name;
@@ -143,7 +146,6 @@ public class Board implements IBoard {
                         }
                     }
                     // Placer le ship
-                    char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
                         // this.ships[y-1][x-1 + i] = label;
                         this.ships[x-1 + i][y-1] = new ShipState(ship, false);
@@ -162,7 +164,6 @@ public class Board implements IBoard {
                         }
                     }
                     // Placer le ship
-                    char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
                         // this.ships[y-1][x-1 - i] = label;
                         this.ships[x-1 - i][y-1] = new ShipState(ship, false);
@@ -181,7 +182,6 @@ public class Board implements IBoard {
                         }
                     }
                     // Placer le ship
-                    char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
                         // this.ships[y-1 - i][x-1] = label;
                         this.ships[x-1][y-1 - i] = new ShipState(ship, false);
@@ -200,7 +200,6 @@ public class Board implements IBoard {
                         }
                     }
                     // Placer le ship
-                    char label = ship.getLabel();
                     for (int i=0; i<shipSize;i++) {
                         // this.ships[y-1 + i][x-1] = label;
                         this.ships[x-1][y-1 + i] = new ShipState(ship, false);

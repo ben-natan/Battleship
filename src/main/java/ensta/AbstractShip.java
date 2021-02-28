@@ -1,12 +1,14 @@
-// package ensta;
+package ensta;
+import java.io.Serializable;
 
-
-public class AbstractShip {
+public class AbstractShip implements Serializable {
     private String name;
     private Character label;
     private int size;
     private Orientation orientation;
     private int strikeCount;
+
+    private static final long serialVersionUID = 1237L;
 
     public AbstractShip(String name, Character label, int size, Orientation orientation) {
         this.name = name;

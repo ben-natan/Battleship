@@ -1,8 +1,8 @@
-// package ensta;
+package ensta;
 import java.io.Serializable;
 import java.util.List;
 
-public class Player {
+public class Player implements Serializable {
     /* **
      * Attributs
      */
@@ -11,6 +11,8 @@ public class Player {
     protected int destroyedCount;
     protected AbstractShip[] ships;
     protected boolean lose;
+
+    private static final long serialVersionUID = 1234L;
 
     /* **
      * Constructeur

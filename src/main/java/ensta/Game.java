@@ -1,8 +1,7 @@
-// package ensta;
+package ensta;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
@@ -127,29 +126,53 @@ public class Game {
 
 
     private void save() {
-        // try {
-        //     // TODO bonus 2 : uncomment
-        //     //  if (!SAVE_FILE.exists()) {
-        //     //      SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
-        //     //  }
+        try {
+            
+            if (!SAVE_FILE.exists()) {
+                SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+            }
+            // TODO bonus 2 : serialize players
 
-        //     // TODO bonus 2 : serialize players
+             // ouverture d'un flux sur un fichier
+            FileOutputStream fos = new FileOutputStream(SAVE_FILE);
+            ObjectOutputStream oos =  new ObjectOutputStream(fos) ;
+                    
+            // création d'un objet à sérializer
+            // sérialization de l'objet
+            oos.writeObject(this.player1);
+            oos.writeObject(this.player2);
 
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+            oos.close(); 
+            fos.close(); 
+              
+            System.out.println("Partie sauvegardée!"); 
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean loadSave() {
-        // if (SAVE_FILE.exists()) {
-        //     try {
-        //         // TODO bonus 2 : deserialize players
+        if (SAVE_FILE.exists()) {
+            try {
+                // Reading the object from a file 
+                FileInputStream fis = new FileInputStream(SAVE_FILE); 
+                ObjectInputStream ois = new ObjectInputStream(fis); 
+                
+                // Method for deserialization of object 
+                this.player1 = (Player)ois.readObject(); 
+                this.player2 = (Player)ois.readObject();
 
-        //         return true;
-        //     } catch (IOException | ClassNotFoundException e) {
-        //         e.printStackTrace();
-        //     }
-        // }
+                ois.close(); 
+                fis.close(); 
+            
+                System.out.println("Partie existante chargée!"); 
+                return true;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         return false;
     }
 

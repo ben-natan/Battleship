@@ -1,8 +1,8 @@
-// package ensta;
-import java.io.Serializable;
+package ensta;
 import java.util.List;
 
 public class AIPlayer extends Player {
+    private static final long serialVersionUID = 1L;
     /* **
      * Attribut
      */

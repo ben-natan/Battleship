@@ -1,5 +1,4 @@
-// package ensta;
-import java.util.List; // Pour tester
+package ensta;
 
 
 public class TestGame {
